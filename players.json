@@ -1,0 +1,18 @@
+[
+	{
+		"desc": "Player1",
+		"weight": 5.0
+	},
+	{
+		"desc": "Player2",
+		"weight": 3.0
+	},
+	{
+		"desc": "Player3",
+		"weight": 4.0
+	},
+	{
+		"desc": "Player4",
+		"weight": 2.0
+	}
+]
