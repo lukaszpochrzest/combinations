@@ -24,6 +24,7 @@ object Main {
   def process(args: Array[String]): Unit = {
     if (args.length < 2) {
       println("Provide input data and partition size")
+      return
     }
 
     val bufferedSource = Source.fromFile(args(0))
@@ -33,7 +34,12 @@ object Main {
     Json.parse(inputFile).validate[Array[InputObject]] match {
       case s: JsSuccess[Array[InputObject]] =>
         val inputObjects: Array[InputObject] = s.get
-        val parts = partitions(args(1).toInt, inputObjects.map(_.weight).toList)
+        val parts =
+          if(args.length > 2) {
+            partitions(args(1).toInt, inputObjects.map(_.weight).toList, args(2).toFloat)
+          } else {
+            partitions(args(1).toInt, inputObjects.map(_.weight).toList)
+          }
         parts.foreach(p => println(p.map(inputObjects.toIndexedSeq)))
       case _: JsError =>
         println("Invalid input file format")
@@ -46,8 +52,10 @@ object Main {
     try {
       process(args)
     } catch {
-      case e: IOException => println("Failed to process file")
-      case _: Throwable => println("Program error")
+      case _: IOException => println("Failed to process file")
+      case e: Throwable =>
+        e.printStackTrace()
+        println("Program error")
     }
   }
 }
